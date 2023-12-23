@@ -1,0 +1,19 @@
+# fireball Project
+
+library/
+temp/
+local/
+build/
+dist/
+releases/
+
+# npm files
+
+
+npm-debug.log
+node_modules/
+
+# os generated files
+
+.DS_Store
+
