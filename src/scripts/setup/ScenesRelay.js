@@ -1,4 +1,5 @@
 import * as PIXI from "pixi.js";
+import { Configuration } from "../game/Configuration";
 import { App } from "./App";
 
 export class ScenesRelay {
@@ -13,7 +14,7 @@ export class ScenesRelay {
       this.currentScene.remove();
     }
 
-    this.currentScene = new App.config.scenes[newScene]();
+    this.currentScene = new Configuration.scenes[newScene]();
     this.container.addChild(this.currentScene.container);
   }
 }

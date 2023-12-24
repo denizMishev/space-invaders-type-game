@@ -1,7 +1,7 @@
 import { Utils } from "../setup/Utils.js";
-import { Game } from "./Game";
+import { Game } from "./Game.js";
 
-export const Config = {
+export const Configuration = {
   scenes: {
     Game,
   },
@@ -9,3 +9,7 @@ export const Config = {
     require["context"]("./../../resources/", true, /\.(png|jpe?g)$/)
   ),
 };
+
+export const allResources = Utils.requireAllResources(
+  require["context"]("./../../resources/", true, /\.(png|jpe?g)$/)
+);

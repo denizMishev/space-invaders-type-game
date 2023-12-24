@@ -3,12 +3,11 @@ import { Loader } from "./Loader";
 import { ScenesRelay } from "./ScenesRelay";
 
 class Application {
-  run(config) {
-    this.config = config;
+  run() {
     this.app = new PIXI.Application({ resizeTo: window });
     document.body.appendChild(this.app.view);
 
-    this.loader = new Loader(this.config);
+    this.loader = new Loader();
     this.loader.preloadResources().then(() => this.start());
 
     this.scenes = new ScenesRelay();

@@ -1,16 +1,16 @@
 import * as PIXI from "pixi.js";
+import { Configuration } from "../game/Configuration";
 
 export class Loader {
-  constructor(configuration) {
+  constructor() {
     this.resources = {};
-    this.configuration = configuration;
   }
 
   preloadResources() {
-    const resourcePromises = this.configuration.allResources.map((resource) => {
-      const key = this.extractKeyFromResource(resource);
+    const resourcePromises = Configuration.allResources.map((resource) => {
+      const key = this.#extractKeyFromResource(resource);
 
-      if (this.isImageResource(resource)) {
+      if (this.#isImageResource(resource)) {
         return PIXI.Assets.load(resource.data.default)
           .then((res) => {
             this.resources[key] = res;
@@ -26,13 +26,13 @@ export class Loader {
     return Promise.all(resourcePromises);
   }
 
-  extractKeyFromResource(resource) {
+  #extractKeyFromResource(resource) {
     const lastSlashIndex = resource.key.lastIndexOf("/") + 1;
     const lastDotIndex = resource.key.lastIndexOf(".");
     return resource.key.substring(lastSlashIndex, lastDotIndex);
   }
 
-  isImageResource(resource) {
+  #isImageResource(resource) {
     return resource.key.endsWith(".png") || resource.key.endsWith(".jpg");
   }
 }
