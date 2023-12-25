@@ -1,5 +1,5 @@
-import { App } from "../setup/App";
 import { Scene } from "../setup/Scene";
+import { Background } from "./Background";
 
 export class Game extends Scene {
   create() {
@@ -7,9 +7,7 @@ export class Game extends Scene {
   }
 
   createBackground() {
-    this.bg = App.createSprite("spacebackground");
-    this.container.addChild(this.bg);
-    this.bg.width = window.innerWidth;
-    this.bg.height = window.innerHeight;
+    this.bg = new Background();
+    this.container.addChild(this.bg.container);
   }
 }

@@ -5,16 +5,14 @@ export class Scene {
   constructor() {
     this.container = new PIXI.Container();
     this.container.interactive = true;
-    this.create();
-    App.app.ticker.add(this.update, this);
+    this.create(); // Call the create method to set up the scene
   }
 
   create() {}
-  update() {}
+
   destroy() {}
 
   remove() {
-    App.add.ticker.remove(this.update, this);
     this.destroy();
     this.container.destroy();
   }
