@@ -11,4 +11,8 @@ export const Configuration = {
   background: {
     movingSpeed: 2,
   },
+  spaceship: {
+    scale: 0.6,
+    horizontalMovement: 0.03,
+  },
 };

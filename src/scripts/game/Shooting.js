@@ -37,7 +37,7 @@ class Bullet {
   }
 
   update() {
-    this.graphics.y -= 6; // Speed of the bullet
+    this.graphics.y -= 6;
   }
 
   isOffScreen() {

@@ -1,11 +1,13 @@
 import { Scene } from "../setup/Scene";
 import { Background } from "./Background";
+import { EnemyV1 } from "./EnemyV1";
 import { Spaceship } from "./Spaceship";
 
 export class Game extends Scene {
   create() {
     this.createBackground();
     this.createSpaceship();
+    this.createEnemies();
   }
 
   createBackground() {
@@ -15,6 +17,11 @@ export class Game extends Scene {
 
   createSpaceship() {
     this.spaceship = new Spaceship();
-    this.container.addChild(this.spaceship.spaceship); // Add the spaceship's sprite to the container
+    this.container.addChild(this.spaceship.spaceship);
+  }
+
+  createEnemies() {
+    this.enemies = new EnemyV1(8);
+    this.container.addChild(this.enemies.container);
   }
 }
