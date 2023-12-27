@@ -8,7 +8,7 @@ export class Spaceship {
     this.spaceship.scale.set(Configuration.spaceship.scale);
     this.spaceship.y = window.innerHeight * 0.9 - this.spaceship.height;
     this.spaceship.x = (window.innerWidth - this.spaceship.width) / 2;
-    this.shooting = new Shooting();
+    this.shooting = new Shooting("spaceship");
     this.setupKeyboardControls();
   }
 

@@ -1,14 +1,20 @@
 import * as PIXI from "pixi.js";
 import { App } from "../setup/App";
+import { Configuration } from "./Configuration";
 
 export class Shooting {
-  constructor() {
+  constructor(calledFrom) {
     this.bullets = [];
+
+    this.bulletDirection = Configuration.shooting[calledFrom].bulletDirection; // -1 for up, 1 for down
+
+    this.bulletColor = Configuration.shooting[calledFrom].bulletColor;
+
     App.app.ticker.add(this.update.bind(this));
   }
 
   shoot(x, y) {
-    const bullet = new Bullet(x, y);
+    const bullet = new Bullet(x, y, this.bulletDirection, this.bulletColor);
     this.bullets.push(bullet);
   }
 
@@ -26,22 +32,25 @@ export class Shooting {
 }
 
 class Bullet {
-  constructor(x, y) {
+  constructor(x, y, direction, bulletColor) {
     this.graphics = new PIXI.Graphics();
-    this.graphics.beginFill(0xffff00);
+    this.graphics.beginFill(bulletColor);
     this.graphics.drawRect(0, 0, 3, 20);
     this.graphics.endFill();
     this.graphics.x = x;
     this.graphics.y = y;
+    this.direction = direction;
     App.app.stage.addChild(this.graphics);
   }
 
   update() {
-    this.graphics.y -= 6;
+    this.graphics.y += 6 * this.direction;
   }
 
   isOffScreen() {
-    return this.graphics.y < -6;
+    return this.direction === -1
+      ? this.graphics.y < -20
+      : this.graphics.y > window.innerHeight;
   }
 
   destroy() {

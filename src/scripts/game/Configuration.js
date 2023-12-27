@@ -15,4 +15,14 @@ export const Configuration = {
     scale: 0.6,
     horizontalMovement: 0.03,
   },
+  shooting: {
+    spaceship: {
+      bulletDirection: -1,
+      bulletColor: 0xffff00,
+    },
+    enemyV1: {
+      bulletDirection: 1,
+      bulletColor: 0xff1414,
+    },
+  },
 };

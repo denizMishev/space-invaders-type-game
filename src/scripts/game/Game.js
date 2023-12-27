@@ -21,7 +21,7 @@ export class Game extends Scene {
   }
 
   createEnemies() {
-    this.enemies = new EnemyV1(8);
+    this.enemies = new EnemyV1(4);
     this.container.addChild(this.enemies.container);
   }
 }
