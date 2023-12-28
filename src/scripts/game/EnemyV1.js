@@ -1,6 +1,7 @@
 import * as PIXI from "pixi.js";
 import { App } from "../setup/App";
 import { Shooting } from "./Shooting";
+import { eventEmitter } from "./EventBus";
 
 export class EnemyV1 {
   constructor(enemyCount) {
@@ -61,10 +62,18 @@ export class EnemyV1 {
     this.speed = 2;
     if (!this.direction) this.direction = 1; // determine the movement direction, 1 = right ; -1 = left
 
+    let movementInfo = [];
+
     const moveAmount = this.speed * this.direction;
     this.enemyContainers.forEach((container) => {
       container.x += moveAmount;
+
+      movementInfo.push({
+        enemyContainer: container,
+      });
     });
+
+    eventEmitter.emit("enemyMovementTracking", movementInfo);
 
     // check for border collision
 
@@ -110,6 +119,6 @@ export class EnemyV1 {
 
   initiateBehaviourPrograms() {
     this.movementBehaviour();
-    this.attackBehaviour();
+    // this.attackBehaviour();
   }
 }
