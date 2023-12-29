@@ -7,12 +7,23 @@ export class Shooting {
   constructor(calledFrom) {
     this.calledFrom = calledFrom;
     this.bullets = [];
+    this.enemies = [];
+    this.spaceshipPosition = {};
 
-    this.bulletDirection = Configuration.shooting[calledFrom].bulletDirection; // -1 for up, 1 for down
-
+    this.bulletDirection = Configuration.shooting[calledFrom].bulletDirection;
     this.bulletColor = Configuration.shooting[calledFrom].bulletColor;
 
     App.app.ticker.add(this.update.bind(this));
+    eventEmitter.on("enemyMovementTracking", this.updateEnemies.bind(this));
+  }
+
+  updateEnemies(movementInfo) {
+    this.enemies = movementInfo.map((enemyInfo) => ({
+      enemyX: enemyInfo.enemyContainer.x,
+      enemyY: enemyInfo.enemyContainer.y,
+      enemyWidth: enemyInfo.enemyContainer.width,
+      enemyHeight: enemyInfo.enemyContainer.height,
+    }));
   }
 
   shoot(x, y) {
@@ -27,19 +38,9 @@ export class Shooting {
   }
 
   update() {
-    let bulletData = [];
-
     for (let i = this.bullets.length - 1; i >= 0; i--) {
       const bullet = this.bullets[i];
       bullet.update();
-
-      bulletData.push({
-        calledFrom: this.calledFrom,
-        x: bullet.graphics.x,
-        y: bullet.graphics.y,
-        width: bullet.graphics.width,
-        height: bullet.graphics.height,
-      });
 
       if (bullet.isOffScreen()) {
         bullet.destroy();
@@ -47,7 +48,36 @@ export class Shooting {
       }
     }
 
-    eventEmitter.emit("bulletTracking", bulletData);
+    this.checkCollisions();
+  }
+
+  checkCollisions() {
+    for (let i = this.bullets.length - 1; i >= 0; i--) {
+      const bullet = this.bullets[i];
+      const bulletRect = new PIXI.Rectangle(
+        bullet.graphics.x,
+        bullet.graphics.y,
+        3,
+        20
+      );
+
+      for (let j = 0; j < this.enemies.length; j++) {
+        const enemy = this.enemies[j];
+        const enemyRect = new PIXI.Rectangle(
+          enemy.enemyX,
+          enemy.enemyY,
+          enemy.enemyWidth,
+          enemy.enemyHeight
+        );
+
+        if (rectsIntersect(bulletRect, enemyRect)) {
+          console.log(`collision detected with enemy at index ${j}`);
+          bullet.destroy();
+          this.bullets.splice(i, 1);
+          break;
+        }
+      }
+    }
   }
 }
 
@@ -78,4 +108,13 @@ class Bullet {
     App.app.stage.removeChild(this.graphics);
     this.graphics.destroy();
   }
+}
+
+function rectsIntersect(rectA, rectB) {
+  return (
+    rectA.x < rectB.x + rectB.width &&
+    rectA.x + rectA.width > rectB.x &&
+    rectA.y < rectB.y + rectB.height &&
+    rectA.height + rectA.y > rectB.y
+  );
 }

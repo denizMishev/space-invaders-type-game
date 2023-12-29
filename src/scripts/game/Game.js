@@ -1,7 +1,6 @@
 import { Scene } from "../setup/Scene";
 import { Background } from "./Background";
 import { EnemyV1 } from "./EnemyV1";
-import { shootingCollisionHandler } from "./ShootingCollisionHandler";
 import { Spaceship } from "./Spaceship";
 
 export class Game extends Scene {
@@ -9,7 +8,6 @@ export class Game extends Scene {
     this.createBackground();
     this.createSpaceship();
     this.createEnemies();
-    shootingCollisionHandler();
   }
 
   createBackground() {
