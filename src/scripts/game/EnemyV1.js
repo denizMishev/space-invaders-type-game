@@ -13,6 +13,7 @@ export class EnemyV1 {
     this.createEnemies();
 
     App.app.ticker.add(this.initiateBehaviourPrograms.bind(this));
+    eventEmitter.on("enemyV1hit", this.handleEnemyHit.bind(this));
   }
 
   createEnemies() {
@@ -39,6 +40,7 @@ export class EnemyV1 {
       const healthBar = this.createHealthBar(enemy);
       healthBar.y = enemy.height - 10;
       enemyContainer.addChild(healthBar);
+      enemyContainer.initialHealthWidth = healthBar.width;
 
       enemyContainer.x = startX + col * colSpacing;
       enemyContainer.y = startY + row * rowSpacing;
@@ -119,6 +121,18 @@ export class EnemyV1 {
 
   initiateBehaviourPrograms() {
     this.movementBehaviour();
-    // this.attackBehaviour();
+    this.attackBehaviour();
+  }
+
+  handleEnemyHit(enemyIndex) {
+    const enemyContainer = this.enemyContainers[enemyIndex];
+    if (!enemyContainer) return;
+
+    const healthBar = enemyContainer.getChildAt(1);
+    const initialHealthWidth = enemyContainer.initialHealthWidth;
+
+    // remove 30% of initial hp on hit
+
+    healthBar.width = Math.max(healthBar.width - initialHealthWidth / 3, 0);
   }
 }

@@ -1,6 +1,7 @@
 import { App } from "../setup/App";
 import { Shooting } from "./Shooting";
 import { Configuration } from "./Configuration";
+import { eventEmitter } from "./EventBus";
 
 export class Spaceship {
   constructor() {
@@ -28,16 +29,28 @@ export class Spaceship {
     this.shooting.shoot(bulletX, bulletY);
   }
 
+  updateSpaceshipData() {
+    const spaceshipData = {
+      x: this.spaceship.x,
+      y: this.spaceship.y,
+      width: this.spaceship.width,
+      height: this.spaceship.height,
+    };
+    eventEmitter.emit("spaceshipPositionUpdate", spaceshipData);
+  }
+
   registerUserInput() {
     window.addEventListener("keydown", (e) => {
       switch (e.key) {
         case "a":
         case "ArrowLeft":
           this.moveLeft();
+          this.updateSpaceshipData();
           break;
         case "d":
         case "ArrowRight":
           this.moveRight();
+          this.updateSpaceshipData();
           break;
         case " ":
           this.shoot();

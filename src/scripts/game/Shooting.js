@@ -14,16 +14,27 @@ export class Shooting {
     this.bulletColor = Configuration.shooting[calledFrom].bulletColor;
 
     App.app.ticker.add(this.update.bind(this));
-    eventEmitter.on("enemyMovementTracking", this.updateEnemies.bind(this));
+    eventEmitter.on(
+      "enemyMovementTracking",
+      this.updateEnemiesPosition.bind(this)
+    );
+    eventEmitter.on(
+      "spaceshipPositionUpdate",
+      this.updateSpaceshipPosition.bind(this)
+    );
   }
 
-  updateEnemies(movementInfo) {
+  updateEnemiesPosition(movementInfo) {
     this.enemies = movementInfo.map((enemyInfo) => ({
       enemyX: enemyInfo.enemyContainer.x,
       enemyY: enemyInfo.enemyContainer.y,
       enemyWidth: enemyInfo.enemyContainer.width,
       enemyHeight: enemyInfo.enemyContainer.height,
     }));
+  }
+
+  updateSpaceshipPosition(spaceshipData) {
+    this.spaceshipPosition = spaceshipData;
   }
 
   shoot(x, y) {
@@ -52,26 +63,43 @@ export class Shooting {
   }
 
   checkCollisions() {
+    let bulletTargetPositions = [];
+    let bulletTarget = "";
+
+    if (this.calledFrom === "spaceship") {
+      bulletTargetPositions = this.enemies.map((enemy) => ({
+        x: enemy.enemyX,
+        y: enemy.enemyY,
+        width: enemy.enemyWidth,
+        height: enemy.enemyHeight,
+      }));
+      bulletTarget = "enemyV1";
+    } else if (this.calledFrom === "enemyV1") {
+      bulletTargetPositions = [this.spaceshipPosition];
+      bulletTarget = "spaceship";
+    }
+
     for (let i = this.bullets.length - 1; i >= 0; i--) {
       const bullet = this.bullets[i];
       const bulletRect = new PIXI.Rectangle(
         bullet.graphics.x,
         bullet.graphics.y,
-        3,
-        20
+        bullet.graphics.width,
+        bullet.graphics.height
       );
 
-      for (let j = 0; j < this.enemies.length; j++) {
-        const enemy = this.enemies[j];
-        const enemyRect = new PIXI.Rectangle(
-          enemy.enemyX,
-          enemy.enemyY,
-          enemy.enemyWidth,
-          enemy.enemyHeight
+      for (let j = 0; j < bulletTargetPositions.length; j++) {
+        const target = bulletTargetPositions[j];
+        const targetRect = new PIXI.Rectangle(
+          target.x,
+          target.y,
+          target.width,
+          target.height
         );
 
-        if (rectsIntersect(bulletRect, enemyRect)) {
-          console.log(`collision detected with enemy at index ${j}`);
+        if (rectsIntersect(bulletRect, targetRect)) {
+          console.log(`Collision detected with ${bulletTarget} at index ${j}`);
+          eventEmitter.emit(`${bulletTarget}hit`, j);
           bullet.destroy();
           this.bullets.splice(i, 1);
           break;
