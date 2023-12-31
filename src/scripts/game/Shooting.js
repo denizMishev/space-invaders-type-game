@@ -98,7 +98,6 @@ export class Shooting {
         );
 
         if (rectsIntersect(bulletRect, targetRect)) {
-          console.log(`Collision detected with ${bulletTarget} at index ${j}`);
           eventEmitter.emit(`${bulletTarget}hit`, j);
           bullet.destroy();
           this.bullets.splice(i, 1);

@@ -67,7 +67,14 @@ export class EnemyV1 {
     let movementInfo = [];
 
     const moveAmount = this.speed * this.direction;
-    this.enemyContainers.forEach((container) => {
+
+    // filter out undefined or null containers
+
+    const validContainers = this.enemyContainers.filter(
+      (container) => container != null
+    );
+
+    validContainers.forEach((container) => {
       container.x += moveAmount;
 
       movementInfo.push({
@@ -79,14 +86,16 @@ export class EnemyV1 {
 
     // check for border collision
 
-    const leftmostContainer = this.enemyContainers[0];
-    const rightmostContainer =
-      this.enemyContainers[this.enemyContainers.length - 1];
-    if (
-      leftmostContainer.x < 0 ||
-      rightmostContainer.x + rightmostContainer.width > window.innerWidth
-    ) {
-      this.direction *= -1;
+    if (validContainers.length > 0) {
+      const leftmostContainer = validContainers[0];
+      const rightmostContainer = validContainers[validContainers.length - 1];
+
+      if (
+        leftmostContainer.x < 0 ||
+        rightmostContainer.x + rightmostContainer.width > window.innerWidth
+      ) {
+        this.direction *= -1;
+      }
     }
   }
 
@@ -131,8 +140,19 @@ export class EnemyV1 {
     const healthBar = enemyContainer.getChildAt(1);
     const initialHealthWidth = enemyContainer.initialHealthWidth;
 
-    // remove 30% of initial hp on hit
+    // 30% damage to health bar on each hit
 
-    healthBar.width = Math.max(healthBar.width - initialHealthWidth / 3, 0);
+    healthBar.width =
+      Math.round((healthBar.width - initialHealthWidth / 3) * 10) / 10;
+
+    if (healthBar.width <= 0) {
+      this.container.removeChild(enemyContainer);
+      this.enemyContainers.splice(enemyIndex, 1);
+      this.enemies.splice(enemyIndex, 1);
+    }
+
+    if (this.enemyContainers.length === 0) {
+      eventEmitter.emit("enemyV1changelevel");
+    }
   }
 }

@@ -1,6 +1,7 @@
 import * as PIXI from "pixi.js";
 import { Loader } from "./Loader";
 import { ScenesRelay } from "./ScenesRelay";
+import { StartingScreen } from "../game/StartingScreen";
 
 class Application {
   run() {
@@ -10,8 +11,8 @@ class Application {
     this.loader = new Loader();
     this.loader.preloadResources().then(() => this.start());
 
-    this.scenes = new ScenesRelay();
-    this.app.stage.addChild(this.scenes.container);
+    this.scenesRelay = new ScenesRelay();
+    this.app.stage.addChild(this.scenesRelay.container);
   }
 
   createSprite(key) {
@@ -19,7 +20,7 @@ class Application {
   }
 
   start() {
-    this.scenes.changeScene("Game");
+    this.scenesRelay.start("StartingScreen", this.scenesRelay);
   }
 }
 

@@ -1,8 +1,10 @@
 import { Utils } from "../setup/Utils.js";
 import { Game } from "./Game.js";
+import { StartingScreen } from "./StartingScreen.js";
 
 export const Configuration = {
   scenes: {
+    StartingScreen,
     Game,
   },
   allResources: Utils.requireAllResources(
