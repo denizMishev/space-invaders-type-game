@@ -7,6 +7,12 @@ export const Configuration = {
     StartingScreen,
     Game,
   },
+  events: {
+    enemyV1hit: "enemyV1Hit",
+    enemyV1CurrentPosition: "enemyV1CurrentPosition",
+    enemyV1EnemiesDestroyed: "enemyV1EnemiesDestroyed",
+    spaceshipCurrentPosition: "spaceshipCurrentPosition",
+  },
   allResources: Utils.requireAllResources(
     require["context"]("./../../resources/", true, /\.(png|jpe?g)$/)
   ),

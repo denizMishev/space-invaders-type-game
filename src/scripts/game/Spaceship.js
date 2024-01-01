@@ -36,7 +36,10 @@ export class Spaceship {
       width: this.spaceship.width,
       height: this.spaceship.height,
     };
-    eventEmitter.emit("spaceshipPositionUpdate", spaceshipData);
+    eventEmitter.emit(
+      Configuration.events.spaceshipCurrentPosition,
+      spaceshipData
+    );
   }
 
   registerUserInput() {

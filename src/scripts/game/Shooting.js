@@ -15,11 +15,11 @@ export class Shooting {
 
     App.app.ticker.add(this.update.bind(this));
     eventEmitter.on(
-      "enemyMovementTracking",
+      Configuration.events.enemyV1CurrentPosition,
       this.updateEnemiesPosition.bind(this)
     );
     eventEmitter.on(
-      "spaceshipPositionUpdate",
+      Configuration.events.spaceshipCurrentPosition,
       this.updateSpaceshipPosition.bind(this)
     );
   }
@@ -98,7 +98,7 @@ export class Shooting {
         );
 
         if (rectsIntersect(bulletRect, targetRect)) {
-          eventEmitter.emit(`${bulletTarget}hit`, j);
+          eventEmitter.emit(`${bulletTarget}Hit`, j);
           bullet.destroy();
           this.bullets.splice(i, 1);
           break;

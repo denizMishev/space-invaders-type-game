@@ -4,6 +4,7 @@ import { EnemyV1 } from "./EnemyV1";
 import { Spaceship } from "./Spaceship";
 import { eventEmitter } from "./EventBus";
 import { MessageText } from "./MessageText";
+import { Configuration } from "./Configuration";
 
 export class Game extends Scene {
   async create() {
@@ -12,7 +13,7 @@ export class Game extends Scene {
 
     await this.changeWave(true, () => this.createEnemies(true));
 
-    eventEmitter.on("enemyV1changelevel", () =>
+    eventEmitter.on(Configuration.events.enemyV1EnemiesDestroyed, () =>
       this.changeWave(false, () => this.createEnemies())
     );
   }

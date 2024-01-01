@@ -2,6 +2,7 @@ import * as PIXI from "pixi.js";
 import { App } from "../setup/App";
 import { Shooting } from "./Shooting";
 import { eventEmitter } from "./EventBus";
+import { Configuration } from "./Configuration";
 
 export class EnemyV1 {
   constructor(enemyCount) {
@@ -13,7 +14,10 @@ export class EnemyV1 {
     this.createEnemies();
 
     App.app.ticker.add(this.initiateBehaviourPrograms.bind(this));
-    eventEmitter.on("enemyV1hit", this.handleEnemyHit.bind(this));
+    eventEmitter.on(
+      Configuration.events.enemyV1hit,
+      this.handleEnemyHit.bind(this)
+    );
   }
 
   createEnemies() {
@@ -82,7 +86,10 @@ export class EnemyV1 {
       });
     });
 
-    eventEmitter.emit("enemyMovementTracking", movementInfo);
+    eventEmitter.emit(
+      Configuration.events.enemyV1CurrentPosition,
+      movementInfo
+    );
 
     // check for border collision
 
@@ -152,7 +159,7 @@ export class EnemyV1 {
     }
 
     if (this.enemyContainers.length === 0) {
-      eventEmitter.emit("enemyV1changelevel");
+      eventEmitter.emit(Configuration.events.enemyV1EnemiesDestroyed);
     }
   }
 }
