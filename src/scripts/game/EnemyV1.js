@@ -3,6 +3,10 @@ import { App } from "../setup/App";
 import { Shooting } from "./Shooting";
 import { eventEmitter } from "./EventBus";
 import { Configuration } from "./Configuration";
+import { gsap } from "gsap";
+import { PixiPlugin } from "gsap/PixiPlugin";
+gsap.registerPlugin(PixiPlugin);
+PixiPlugin.registerPIXI(PIXI);
 
 export class EnemyV1 {
   constructor(enemyCount) {
@@ -156,6 +160,27 @@ export class EnemyV1 {
       this.container.removeChild(enemyContainer);
       this.enemyContainers.splice(enemyIndex, 1);
       this.enemies.splice(enemyIndex, 1);
+    } else {
+      const enemySprite = enemyContainer.children[0];
+      const damageAnimation = gsap.timeline({ repeat: 3, yoyo: true });
+      damageAnimation
+        .to(enemySprite, {
+          duration: 0.2,
+          pixi: { tint: 0xffa500 },
+          ease: "none",
+        })
+        .to(enemySprite, {
+          duration: 0.2,
+          pixi: { tint: 0xff4500 },
+          ease: "none",
+        });
+      damageAnimation.eventCallback("onComplete", () => {
+        gsap.to(enemySprite, {
+          duration: 0.2,
+          pixi: { tint: 0xffffff, rotation: 0 },
+          ease: "none",
+        });
+      });
     }
 
     if (this.enemyContainers.length === 0) {
